@@ -1,11 +1,29 @@
 # syntax=docker/dockerfile:1
 
-FROM ubuntu:24.04
-RUN apt update
-RUN apt install -y git build-essential automake autoconf libtool libarchive-tools nasm pacman-package-manager makepkg
+FROM archlinux:base-devel
+
+# create pacbrew user
+RUN useradd -m "pacbrew"
+RUN echo "pacbrew:pacbrew" | chpasswd
+RUN echo "pacbrew ALL=(ALL) NOPASSWD: ALL" >> "/etc/sudoers.d/10-pacbrew"
+RUN mkdir -p "/home/pacbrew/.ssh" && chown -R pacbrew:pacbrew "/home/pacbrew/.ssh"
+
+# add pacbrew repo to pacman config
 RUN echo "[pacbrew]" >> /etc/pacman.conf
 RUN echo "SigLevel = Optional TrustAll" >> /etc/pacman.conf
 RUN echo "Server = http://pacbrew.mydedibox.fr/packages/" >> /etc/pacman.conf
+
+# i want "tar.xz" packages for pacbrew
+RUN sed -i "s/PKGEXT=.*/PKGEXT='.pkg.tar.xz'/g" /etc/makepkg.conf
+
+# install needed packages
 RUN pacman -Sy
-RUN pacman -S --noconfirm ps4-openorbis ps4-openorbis-portlibs dc-toolchain dc-portlibs
+RUN pacman -S --noconfirm --needed \
+  sudo openssh wget curl git cmake ninja meson nasm \
+  ps4-openorbis ps4-openorbis-portlibs \
+  dc-toolchain dc-portlibs
+
+# cleanup
+RUN sudo pacman -Scc --noconfirm
+RUN rm -rf /var/cache/pacman/pkg
 
