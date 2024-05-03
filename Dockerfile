@@ -20,8 +20,7 @@ RUN sed -i "s/PKGEXT=.*/PKGEXT='.pkg.tar.xz'/g" /etc/makepkg.conf
 RUN pacman -Sy
 RUN pacman -S --noconfirm --needed \
   sudo openssh openssl-1.1 wget curl git cmake nasm \
-  ps4-openorbis ps4-openorbis-portlibs \
-  dc-toolchain dc-portlibs
+  ps4-openorbis ps4-openorbis-portlibs
 
 # cleanup
 RUN sudo pacman -Scc --noconfirm
