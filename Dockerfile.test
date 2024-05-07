@@ -1,8 +1,7 @@
 # syntax=docker/dockerfile:1
 
-FROM cpasjuste/pacbrew
+FROM cpasjuste/pacbrew:latest
 
 RUN git clone --recursive https://github.com/PacBrew/pacbrew-packages.git
 RUN chown -R pacbrew:pacbrew pacbrew-packages
 RUN cd pacbrew-packages && su -c "./pacbrew.sh" -g pacbrew pacbrew
-

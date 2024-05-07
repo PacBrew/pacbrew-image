@@ -16,10 +16,13 @@ RUN echo "Server = http://pacbrew.mydedibox.fr/packages/" >> /etc/pacman.conf
 # i want "tar.xz" packages for pacbrew
 RUN sed -i "s/PKGEXT=.*/PKGEXT='.pkg.tar.xz'/g" /etc/makepkg.conf
 
+# MAKEFLAGS
+RUN sed -i 's/#MAKEFLAGS=.*/MAKEFLAGS="-j$(getconf _NPROCESSORS_ONLN)"/g' /etc/makepkg.conf
+
 # install needed packages
 RUN pacman -Sy
 RUN pacman -S --noconfirm --needed \
-  sudo openssh wget curl git cmake nasm dotnet-sdk \
+  sudo openssh wget curl git cmake nasm python dotnet-sdk \
   ps4-openorbis ps4-openorbis-portlibs
 
 # cleanup
