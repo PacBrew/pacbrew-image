@@ -19,7 +19,7 @@ RUN sed -i "s/PKGEXT=.*/PKGEXT='.pkg.tar.xz'/g" /etc/makepkg.conf
 # install needed packages
 RUN pacman -Sy
 RUN pacman -S --noconfirm --needed \
-  sudo openssh openssl-1.1 wget curl git cmake nasm \
+  sudo openssh wget curl git cmake nasm dotnet-sdk \
   ps4-openorbis ps4-openorbis-portlibs
 
 # cleanup
